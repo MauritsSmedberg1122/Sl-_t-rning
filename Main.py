@@ -15,22 +15,43 @@ def speech(words, time_in_seconds):
     print()
     sleep(time_in_seconds)
 
-def calcution(user_calculation, dices):
-    # user_calculation = "1+2*3-4+5"
-    # dices = [1,2,3,4,5]
-
-    # Gå igenom varje bokstav/siffra i texten och kontrollera vad du ska 
-    
-    # I slutet vill vi ha ett tal som är:
-    # goal = 1+2*3-4+5 = 10
+def calculation(user_calculation, dices):
+    result = 0
+    operation = "+"
 
     # Look through all characters in the users calculation.
-    goal = 0
     for letter in user_calculation:
+
         # Control if the letter is a number
         if letter.isdigit():
-            pass
-    return goal
+            number = int(letter)
+
+            # Control if the number is in dices
+            if number in dices:
+                # Remove number from dices
+                dices.remove(number)
+            else:
+                speech("You used a non-existing number", 1)
+                return False
+            
+            # Adding the different calculations
+            if operation == "+":
+                result = result + number
+            elif operation == "-":
+                result = result - number
+            elif operation == "/":
+                result = result / number
+            elif operation == "*":
+                result = result * number
+            else:
+                speech("You typed the wrong calculation.", 1)
+                return False
+        
+        else:
+            # Change the calculation.
+            operation = letter
+
+    return result
 
 # ------------------ END: Functions --------------------------------------
 
@@ -39,8 +60,7 @@ def main():
     # Tell the user the instructions about the game
     speech("Welcome to roll a dice!", 1) 
 
-    words = f"In this game, your task is to first roll the dice. Then, with the help of mathematics, you should get the result to a number.\nGood luck!"
-    speech(words, 1.5)
+    speech(f"In this game, your task is to first roll the dice. Then, with the help of\nmathematics\n(plus, minus, times and divided)\nyou should get the result to the result of blue and white dice together.\nGood luck!", 1.5)
 
     # Throw the blue and red dice
     red_dice = random.randrange (1, 7)
@@ -64,10 +84,24 @@ def main():
     speech(f"To win you should get the result: {goal}", 1)
 
     # Now it is time for the user to input his guess.
-    # When we have the input call the calculation function.
-# ------------------ END: Main function --------------------------------------
+    speech("Now it's time to start calculating! Input your guess:", 1)
+    user_calculation = input()
+    user_result = calculation(user_calculation, white_dices) 
+    speech(f"Your answer was {user_result}", 1)
+    if goal == user_result:
+        speech("You won!", 1)
+    else:
+        speech("You lost!", 1)
+    # ------------------ END: Main function --------------------------------------
 
 # ------------------ BEGIN: Entrance path ------------------------------------
 if __name__ == "__main__":
-    main()
+    play_again = "Yes"
+    while play_again == "Yes":
+        main()
+        speech("If you want to play again type 'Yes'", 1)
+        play_again = input()
+
+        
+    
 # ------------------ END: Entrance path --------------------------------------
