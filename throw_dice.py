@@ -3,9 +3,6 @@ import random
 from time import sleep
 # ------------------ END: Import ----------------------
 
-# ------------------ BEGIN: Constants and global variables ---------------
-# ------------------ END: Constants and global variables -----------------
-
 # ------------------ BEGIN: Functions ------------------------------------
 def speech(words, time_in_seconds):
     for char in words:
@@ -43,13 +40,16 @@ def calculation(user_calculation, dices):
                 result = result / number
             elif operation == "*":
                 result = result * number
+            
+        else:
+            # Control if letter is in the list ["+", "-", "/", "*"]
+            # If it is make operation = letter
+            # else tell the user he/she typed the wrong operation.
+            if letter in ["+", "-", "/", "*"]:
+                operation = letter 
             else:
                 speech("You typed the wrong calculation.", 1)
                 return False
-        
-        else:
-            # Change the calculation.
-            operation = letter
 
     return result
 
